@@ -1,40 +1,61 @@
-## Getting Started
+import React, { useState } from "react";
+import { useContract, useContractWrite } from "@thirdweb-dev/react";
+import { ConnectWallet } from "@thirdweb-dev/react";
+import { ethers } from "ethers";
+import { Input, Button, Box, FormControl, FormLabel, Heading } from "@chakra-ui/react";
+import NavbarPage from '../components/Navbar';
 
-Create a project using this example:
+export default function Component() {
+  const { contract } = useContract("0xcd5FBE3a8A865B6041D3e31cf768741FaeB82c26");
+  const { mutateAsync: createEvent, isLoading } = useContractWrite(contract, "createEvent");
 
-```bash
-npx thirdweb create --template next-javascript-starter
-```
+  const [name, setName] = useState("");
+  const [ticketPrice, setTicketPrice] = useState("");
+  const [totalTickets, setTotalTickets] = useState("");
+  const [approvalThreshold, setApprovalThreshold] = useState("");
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+  const call = async () => {
+    try {
+      const data = await createEvent({ args: [name, ethers.utils.parseEther(ticketPrice), totalTickets, approvalThreshold] });
+      console.info("contract call success", data);
+    } catch (err) {
+      console.error("contract call failure", err);
+    }
+  };
 
-On `pages/_app.js`, you'll find our `ThirdwebProvider` wrapping your app, this is necessary for our [hooks](https://portal.thirdweb.com/react) and
-[UI Components](https://portal.thirdweb.com/ui-components) to work.
+  return (
+    <>
+    <NavbarPage />
+    <Box p={4}>
+      <ConnectWallet />
+      <Heading size="lg" mb={4}>
+        Create Event
+      </Heading>
 
-## Environment Variables
+      <FormControl>
+        <FormLabel>Name:</FormLabel>
+        <Input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+      </FormControl>
 
-To run this project, you will need to add environment variables. Check the `.env.example` file for all the environment variables required and add it to `.env.local` file or set them up on your hosting provider.
+      <FormControl mt={4}>
+        <FormLabel>Ticket Price:</FormLabel>
+        <Input type="text" value={ticketPrice} onChange={(e) => setTicketPrice(e.target.value)} />
+      </FormControl>
 
-## Deploy to IPFS
+      <FormControl mt={4}>
+        <FormLabel>Total Tickets:</FormLabel>
+        <Input type="text" value={totalTickets} onChange={(e) => setTotalTickets(e.target.value)} />
+      </FormControl>
 
-Deploy a copy of your application to IPFS using the following command:
+      <FormControl mt={4}>
+        <FormLabel>Approval Threshold:</FormLabel>
+        <Input type="text" value={approvalThreshold} onChange={(e) => setApprovalThreshold(e.target.value)} />
+      </FormControl>
 
-```bash
-yarn deploy
-```
-
-## Learn More
-
-To learn more about thirdweb and Next.js, take a look at the following resources:
-
-- [thirdweb React Documentation](https://docs.thirdweb.com/react) - learn about our React SDK.
-- [thirdweb JavaScript Documentation](https://docs.thirdweb.com/react) - learn about our JavaScript/TypeScript SDK.
-- [thirdweb Portal](https://docs.thirdweb.com/react) - check our guides and development resources.
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Templates](https://thirdweb.com/templates)
-
-You can check out [the thirdweb GitHub organization](https://github.com/thirdweb-dev) - your feedback and contributions are welcome!
-
-## Join our Discord!
-
-For any questions, suggestions, join our discord at [https://discord.gg/thirdweb](https://discord.gg/thirdweb).
+      <Button mt={4} colorScheme="teal" isLoading={isLoading} onClick={call}>
+        Create Event
+      </Button>
+    </Box>
+    </>
+  );
+}

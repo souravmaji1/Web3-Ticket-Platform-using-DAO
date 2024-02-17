@@ -1,53 +1,74 @@
-import { Box } from '@chakra-ui/react'
+import {
+  Box,
+  Badge,
+  Text,
+  Spacer,
+  Button,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+} from '@chakra-ui/react'
 import {
   AppShell,
   Sidebar,
+  SidebarToggleButton,
   SidebarSection,
   NavItem,
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
   NavGroup,
-  SearchInput,
+  PersonaAvatar,
 } from '@saas-ui/react'
 import { FiHome, FiUsers, FiSettings,FiHelpCircle } from 'react-icons/fi'
-import UploadPage from '../components/Chart';
-import Charts from '../components/Bar';
-import {
-  Badge,
-  Text,
-} from '@chakra-ui/react'
+import { ConnectWallet } from '@thirdweb-dev/react'
+import Image from 'next/image'
 
 
 export default function Page() {
   return (
+    <>
+    <div>
     <AppShell
-      variant="static"
-      minH="$100vh"
-      navbar={
-        <Navbar borderBottomWidth="1px" position="sticky" top="0">
-          <NavbarBrand>
-           
-          </NavbarBrand>
-          <NavbarContent justifyContent="flex-end">
-            <NavbarItem>
-              <SearchInput size="sm" />
-            </NavbarItem>
-          </NavbarContent>
-        </Navbar>
-      }
       sidebar={
-        <Sidebar position="sticky" top="56px" toggleBreakpoint="sm">
-          <SidebarSection>
-         
-          <NavGroup>
+        <Sidebar toggleBreakpoint="sm" sx={{height:'100vh'}}>
+          <SidebarToggleButton />
+          <SidebarSection direction="row">
+            <Image
+            width={30}
+            height={30}
+              src="https://saas-ui.dev/favicons/favicon-96x96.png"
+              boxSize="7"
+            />
+            <Spacer />
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                icon={
+                  <PersonaAvatar
+                    presence="online"
+                    size="xs"
+                    src="/showcase-avatar.jpg"
+                  />
+                }
+                variant="ghost"
+              />
+              <MenuList>
+                <ConnectWallet />
+              </MenuList>
+            </Menu>
+          </SidebarSection>
+          
+          
+          <SidebarSection aria-label="Main">
+            <NavGroup>
               <NavItem icon={<FiHome />} isActive>
                 Home
               </NavItem>
+            
+              <NavItem icon={<FiUsers />}>Users</NavItem>
+            
               
-              <NavItem href='/profile' icon={<FiUsers />}>Profile</NavItem>
-              <NavItem href='/event'  icon={<FiSettings />}>Create</NavItem>
+              <NavItem icon={<FiSettings />}>Settings</NavItem>
             </NavGroup>
 
             <NavGroup title="Teams" isCollapsible>
@@ -77,15 +98,11 @@ export default function Page() {
           <SidebarSection flex="1" overflowY="auto"></SidebarSection>
           <SidebarSection>
             <NavItem icon={<FiHelpCircle />}>Documentation</NavItem>
-         
           </SidebarSection>
         </Sidebar>
       }
-    >
-      <Box as="main" flex="1" py="2" px="4">
-      <UploadPage />
-      <Charts />
-      </Box>
-    </AppShell>
+    />
+    </div>
+    </>
   )
 }

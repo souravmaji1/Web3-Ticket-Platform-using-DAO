@@ -12,19 +12,21 @@ import {
   SearchInput,
 } from '@saas-ui/react'
 import { FiHome, FiUsers, FiSettings,FiHelpCircle } from 'react-icons/fi'
-import UploadPage from '../components/Chart';
-import Charts from '../components/Bar';
 import {
   Badge,
   Text,
 } from '@chakra-ui/react'
-
+import ProfileSection from '../components/Profile';
+import { useRouter } from 'next/router';
 
 export default function Page() {
+    const router = useRouter();
+    const isNavItemActive = (href) => router.pathname === href;
+
   return (
     <AppShell
       variant="static"
-      minH="$100vh"
+      height="100vh"
       navbar={
         <Navbar borderBottomWidth="1px" position="sticky" top="0">
           <NavbarBrand>
@@ -42,12 +44,18 @@ export default function Page() {
           <SidebarSection>
          
           <NavGroup>
-              <NavItem icon={<FiHome />} isActive>
+              <NavItem href='/' icon={<FiHome />} 
+              isActive={isNavItemActive('/')}
+              >
                 Home
               </NavItem>
               
-              <NavItem href='/profile' icon={<FiUsers />}>Profile</NavItem>
-              <NavItem href='/event'  icon={<FiSettings />}>Create</NavItem>
+              <NavItem href='/profile' icon={<FiUsers />}
+              isActive={isNavItemActive('/profile')}
+              >Profile</NavItem>
+              <NavItem href='/event'  icon={<FiSettings />}
+              isActive={isNavItemActive('/event')}
+              >Create</NavItem>
             </NavGroup>
 
             <NavGroup title="Teams" isCollapsible>
@@ -82,9 +90,8 @@ export default function Page() {
         </Sidebar>
       }
     >
-      <Box as="main" flex="1" py="2" px="4">
-      <UploadPage />
-      <Charts />
+      <Box as="main" flex="1" py="2" px="4" overflowY="scroll">
+    <ProfileSection />
       </Box>
     </AppShell>
   )
